@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CRE Syndication, Decoded — Alchemy Wealth Builders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080605;
+    --gold:#C9A052;
+    --gold-light:#DBBA7C;
+    --gold-deep:#A87F38;
+    --white:#FFFFFF;
+    --off:#EDEAE3;
+    --muted:rgba(237,234,227,0.62);
+    --hair:rgba(201,160,82,0.3);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#000;
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Poppins',sans-serif;
+    padding:28px 12px;
+  }
+  .app{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+
+  .brandbar{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--gold);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;}
+
+  .progress{display:flex;gap:5px;width:100%;}
+  .progress .seg{flex:1;height:2.5px;background:rgba(237,234,227,0.14);border-radius:2px;overflow:hidden;}
+  .progress .seg .fill{height:100%;width:0%;background:var(--gold);transition:width .25s ease;}
+
+  .frame{
+    position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;border-radius:6px;
+    box-shadow:0 30px 70px -18px rgba(0,0,0,0.9), 0 0 0 1px var(--hair);
+    background:var(--bg);
+  }
+  .track{display:flex;height:100%;transition:transform .45s cubic-bezier(.65,0,.35,1);touch-action:pan-y;}
+
+  .slide{
+    flex:0 0 100%;height:100%;position:relative;color:var(--off);
+    padding:30px 26px 22px;display:flex;flex-direction:column;overflow:hidden;
+    text-align:center;
+  }
+  /* diagonal gold light rays, matching the reference creative */
+  .slide::before{
+    content:"";position:absolute;inset:-20% -20%;pointer-events:none;
+    background:
+      repeating-linear-gradient(112deg,
+        rgba(201,160,82,0.22) 0px, rgba(201,160,82,0.22) 2px,
+        transparent 2px, transparent 16px),
+      repeating-linear-gradient(112deg,
+        rgba(201,160,82,0.09) 0px, rgba(201,160,82,0.09) 8px,
+        transparent 8px, transparent 46px);
+    mix-blend-mode:screen;
+  }
+  .slide::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 85% at 25% -10%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 68%, rgba(0,0,0,0.92) 100%);
+  }
+
+  .content{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;min-height:0;align-items:center;}
+
+  .kicker{
+    font-family:'Abril Fatface',serif;
+    color:var(--white);
+    font-size:16px;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    line-height:1.3;
+    margin:2px 0 10px;
+  }
+  h1.headline, h2.headline{
+    font-family:'Abril Fatface',serif;
+    color:var(--gold);
+    font-weight:400;
+    font-size:24px;
+    line-height:1.22;
+    margin:0 0 14px;
+  }
+  h1.headline{font-size:26px;}
+  p.body{
+    font-size:13px;
+    line-height:1.65;
+    color:var(--off);
+    margin:0 0 8px;
+    max-width:320px;
+  }
+  p.body b{color:var(--white);font-weight:700;}
+
+  .btn-gold{
+    display:inline-block;
+    background:linear-gradient(135deg,var(--gold-light),var(--gold) 60%,var(--gold-deep));
+    color:#1C1408;
+    font-family:'Poppins',sans-serif;
+    font-weight:800;
+    font-size:12.5px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:14px 22px;
+    border:none;
+    cursor:pointer;
+    width:100%;
+    max-width:280px;
+  }
+
+  .foot{position:relative;z-index:2;font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:auto;padding-top:10px;}
+
+  /* COVER */
+  .cover .content{justify-content:center;}
+  .swipe-cue{margin-top:16px;font-size:11px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px;}
+  .arrow-bounce{display:inline-block;animation:bounceX 1.4s infinite;}
+  @keyframes bounceX{0%,100%{transform:translateX(0);}50%{transform:translateX(6px);}}
+
+  /* pool diagram */
+  .pool-diagram{display:flex;align-items:center;justify-content:center;gap:16px;margin:10px 0 6px;}
+  .investors{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+  .dot-inv{width:14px;height:14px;border-radius:50%;background:var(--gold);opacity:0.85;}
+  .arrow-in{font-size:18px;color:var(--gold);}
+  .building{font-size:38px;line-height:1;filter:grayscale(0.15) sepia(0.2);}
+  .diagram-caption{color:var(--muted);font-size:10.5px;margin-top:6px;}
+
+  /* GP / LP split */
+  .split{display:flex;gap:10px;margin-top:8px;width:100%;}
+  .split-card{flex:1;background:rgba(201,160,82,0.06);border:1px solid var(--hair);padding:14px 10px;text-align:left;}
+  .split-card .tag{font-size:9px;letter-spacing:1.5px;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:6px;text-align:center;}
+  .split-card h3{font-family:'Abril Fatface',serif;font-weight:400;font-size:15px;margin:0 0 8px;color:var(--white);text-align:center;}
+  .split-card ul{margin:0;padding-left:14px;font-size:10.5px;line-height:1.6;color:var(--off);}
+
+  /* capital stack */
+  .stack{display:flex;flex-direction:column-reverse;gap:3px;margin-top:12px;width:100%;}
+  .stack-row{padding:12px;font-size:10.5px;display:flex;justify-content:space-between;align-items:center;text-align:left;}
+  .stack-row span.label{font-weight:700;font-size:12px;font-family:'Poppins',sans-serif;}
+  .s-debt{background:rgba(255,255,255,0.05);height:60px;color:var(--off);border:1px solid var(--hair);}
+  .s-pref{background:rgba(201,160,82,0.16);height:42px;color:var(--off);border:1px solid var(--hair);}
+  .s-common{background:linear-gradient(120deg,var(--gold-light),var(--gold));color:#1C1408;height:42px;}
+  .stack-caption{font-size:10.5px;color:var(--muted);margin-top:10px;}
+
+  /* waterfall */
+  .math-box{
+    margin-top:12px;background:rgba(201,160,82,0.07);border:1px solid var(--hair);padding:12px 14px;
+    font-size:11.5px;line-height:1.9;color:var(--off);max-height:0;opacity:0;overflow:hidden;
+    transition:max-height .4s ease, opacity .3s ease;width:100%;text-align:left;
+  }
+  .math-box.open{max-height:200px;opacity:1;}
+  .math-box .row{display:flex;justify-content:space-between;}
+  .math-box .row.total{border-top:1px dashed var(--hair);margin-top:4px;padding-top:6px;font-weight:700;color:var(--gold-light);}
+  .btn-outline{
+    background:none;border:1.5px solid var(--gold);color:var(--gold);
+    font-family:'Poppins',sans-serif;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;
+    padding:11px 18px;cursor:pointer;margin-top:4px;
+  }
+
+  /* timeline */
+  .timeline{position:relative;margin-top:12px;width:100%;text-align:left;padding-left:4px;}
+  .tl-item{display:flex;gap:12px;margin-bottom:13px;position:relative;}
+  .tl-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:5px;flex-shrink:0;position:relative;z-index:1;}
+  .tl-line{position:absolute;left:3.5px;top:13px;bottom:-13px;width:1px;background:var(--hair);}
+  .tl-item:last-child .tl-line{display:none;}
+  .tl-text b{font-size:12px;font-family:'Poppins',sans-serif;font-weight:700;display:block;margin-bottom:2px;color:var(--white);}
+  .tl-text span{font-size:10.5px;color:var(--off);line-height:1.4;}
+
+  /* flip cards */
+  .flip-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;width:100%;flex:1;}
+  .flip-card{perspective:1000px;min-height:88px;cursor:pointer;}
+  .flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{position:absolute;inset:0;backface-visibility:hidden;padding:10px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--hair);}
+  .flip-front{background:rgba(201,160,82,0.06);}
+  .flip-front b{font-family:'Poppins',sans-serif;font-size:11.5px;font-weight:700;color:var(--white);}
+  .flip-front span{font-size:8.5px;color:var(--gold);letter-spacing:0.6px;text-transform:uppercase;font-weight:700;margin-top:3px;}
+  .flip-back{background:linear-gradient(120deg,var(--gold-light),var(--gold));color:#1C1408;transform:rotateY(180deg);font-size:10px;line-height:1.4;font-weight:500;}
+
+  /* flags */
+  .flag-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;width:100%;text-align:left;}
+  .flag-item{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,0.04);border-left:3px solid var(--gold);padding:9px 11px;font-size:10.5px;line-height:1.4;}
+  .flag-item.bad{border-left-color:#8A5A3A;}
+  .flag-item .ic{font-size:12px;margin-top:1px;}
+  .flag-item b{font-family:'Poppins',sans-serif;font-weight:700;font-size:11px;display:block;color:var(--white);}
+  .flag-item span{color:var(--off);}
+
+  /* controls */
+  .controls{display:flex;align-items:center;justify-content:space-between;width:100%;}
+  .navbtn{background:rgba(201,160,82,0.08);border:1px solid var(--hair);color:var(--off);width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .navbtn:active{transform:scale(0.92);}
+  .dots{display:flex;gap:6px;}
+  .dots button{width:6px;height:6px;border-radius:50%;background:rgba(237,234,227,0.22);border:none;cursor:pointer;padding:0;transition:background .2s, width .2s;}
+  .dots button.active{background:var(--gold);width:16px;border-radius:4px;}
+  .hint{font-size:9.5px;color:rgba(237,234,227,0.35);letter-spacing:0.8px;text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brandbar">Alchemy Wealth Builders</div>
+  <div class="progress" id="progress"></div>
+
+  <div class="frame" id="frame">
+    <div class="track" id="track">
+
+      <!-- 1 COVER -->
+      <div class="slide cover">
+        <div class="content">
+          <div class="kicker">Syndication, Decoded</div>
+          <h1 class="headline">You Don't Need $2,000,000 To Own A Piece Of A $20M Apartment Building.</h1>
+          <p class="body">Discover how everyday investors <b>build long-term equity</b> and generate <b>consistent, tax-efficient passive income</b> through smart real estate syndications.</p>
+          <div class="swipe-cue">Swipe To Learn How <span class="arrow-bounce">→</span></div>
+        </div>
+        <div class="foot">Sheet 01 / 09</div>
+      </div>
+
+      <!-- 2 WHAT IS SYNDICATION -->
+      <div class="slide">
+        <div class="content">
+          <div class="kicker">The Basics</div>
+          <h2 class="headline">What Is A Syndication?</h2>
+          <p class="body">A group of investors pool capital to acquire a property too large — or too expensive — for any one of them to buy alone.</p>
+          <p class="body">One sponsor finds, underwrites, and runs the deal. <b>We co-invest alongside every investor</b>, so our interests move together.</p>
+          <div class="pool-diagram">
+            <div class="investors">
+              <div class="dot-inv"></div><div class="dot-inv"></div><div class="dot-inv"></div>
+              <div class="dot-inv"></div><div class="dot-inv"></div><div class="dot-inv"></div>
+            </div>
+            <div class="arrow-in">→</div>
+            <div class="building">🏢</div>
+          </div>
+          <div class="diagram-caption">Many investors, one asset, one sponsor at the helm.</div>
+        </div>
+        <div class="foot">Sheet 02 / 09</div>
+      </div>
+
+      <!-- 3 GP vs LP -->
+      <div class="slide">
+        <div class="content">
+          <div class="kicker">Know The Players</div>
+          <h2 class="headline">GP vs. LP</h2>
+          <div class="split">
+            <div class="split-card">
+              <div class="tag">Sponsor</div>
+              <h3>General Partner</h3>
+              <ul>
+                <li>Sources &amp; underwrites the deal</li>
+                <li>Raises the capital</li>
+                <li>Manages the asset day-to-day</li>
+                <li>Co-invests 5–10% of equity</li>
+              </ul>
+            </div>
+            <div class="split-card">
+              <div class="tag">Investor</div>
+              <h3>Limited Partner</h3>
+              <ul>
+                <li>Provides most of the capital</li>
+                <li>Fully passive, no management</li>
+                <li>Liability capped at investment</li>
+                <li>Usually 70–90% of equity</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="foot">Sheet 03 / 09</div>
+      </div>
+
+      <!-- 4 CAPITAL STACK -->
+      <div class="slide">
+        <div class="content">
+          <div class="kicker">How Deals Are Funded</div>
+          <h2 class="headline">The Capital Stack</h2>
+          <p class="body">Risk — and potential return — increases as you move up the stack.</p>
+          <div class="stack">
+            <div class="stack-row s-common"><span class="label">Common Equity</span><span>GP + LP</span></div>
+            <div class="stack-row s-pref"><span class="label">Preferred Equity</span><span>optional layer</span></div>
+            <div class="stack-row s-debt"><span class="label">Senior Debt</span><span>bank loan</span></div>
+          </div>
+          <div class="stack-caption">Debt is paid first, no matter what. Equity holders take what's left — and the biggest upside.</div>
+        </div>
+        <div class="foot">Sheet 04 / 09</div>
+      </div>
+
+      <!-- 5 WATERFALL -->
+      <div class="slide">
+        <div class="content">
+          <div class="kicker">Where Profits Go</div>
+          <h2 class="headline">The Distribution Waterfall</h2>
+          <p class="body">LPs typically earn a <b>preferred return</b> (commonly 8%) before the GP earns anything. After that, profit splits — often 70/30 in the LP's favor.</p>
+          <button class="btn-outline" onclick="toggleMath(this)">Tap To See The Math ↓</button>
+          <div class="math-box" id="mathbox">
+            <div class="row"><span>LP invests</span><span>$100,000</span></div>
+            <div class="row"><span>8% pref return</span><span>$8,000/yr, paid first</span></div>
+            <div class="row"><span>Profit above pref</span><span>split 70/30</span></div>
+            <div class="row total"><span>LP receives</span><span>pref + 70% of upside</span></div>
+          </div>
+        </div>
+        <div class="foot">Sheet 05 / 09</div>
+      </div>
+
+      <!-- 6 LIFECYCLE -->
+      <div class="slide">
+        <div class="content">
+          <div class="kicker">The Timeline</div>
+          <h2 class="headline">Life Of A Syndication</h2>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-line"></div>
+              <div class="tl-text"><b>Acquisition</b><span>Property is purchased, capital is called from LPs.</span></div>
+            </div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-line"></div>
+              <div class="tl-text"><b>Value-Add / Lease-Up</b><span>The business plan is executed — renovations, re-leasing, operations.</span></div>
+            </div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-line"></div>
+              <div class="tl-text"><b>Stabilization</b><span>Occupancy and income hit target; distributions begin.</span></div>
+            </div>
+            <div class="tl-item"><div class="tl-dot"></div>
+              <div class="tl-text"><b>Refinance or Sale</b><span>Typically 3–7 years in. Capital returned per the waterfall.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">Sheet 06 / 09</div>
+      </div>
+
+      <!-- 7 RED FLAGS -->
+      <div class="slide">
+        <div class="content">
+          <div class="kicker">Before You Invest</div>
+          <h2 class="headline">What To Check First</h2>
+          <div class="flag-list">
+            <div class="flag-item"><span class="ic">✓</span><div><b>Sponsor track record</b><span>Ask for verified deals, not just a pitch deck.</span></div></div>
+            <div class="flag-item"><span class="ic">✓</span><div><b>GP co-invests real money</b><span>Skin in the game aligns incentives.</span></div></div>
+            <div class="flag-item bad"><span class="ic">⚠</span><div><b>Aggressive exit cap rate</b><span>Assuming the market improves is a red flag.</span></div></div>
+            <div class="flag-item bad"><span class="ic">⚠</span><div><b>Vague fee structure</b><span>You should be able to name every fee before investing.</span></div></div>
+          </div>
+        </div>
+        <div class="foot">Sheet 07 / 09</div>
+      </div>
+
+      <!-- 8 GLOSSARY -->
+      <div class="slide">
+        <div class="content">
+          <div class="kicker">Speak The Language</div>
+          <h2 class="headline">Tap A Term To Flip It</h2>
+          <div class="flip-grid">
+            <div class="flip-card" onclick="this.classList.toggle('flipped')">
+              <div class="flip-inner">
+                <div class="flip-face flip-front"><b>Cap Rate</b><span>Tap →</span></div>
+                <div class="flip-face flip-back">Net operating income ÷ purchase price. Measures unlevered return.</div>
+              </div>
+            </div>
+            <div class="flip-card" onclick="this.classList.toggle('flipped')">
+              <div class="flip-inner">
+                <div class="flip-face flip-front"><b>Cash-on-Cash</b><span>Tap →</span></div>
+                <div class="flip-face flip-back">Annual cash distributed ÷ cash invested. Your yearly "yield."</div>
+              </div>
+            </div>
+            <div class="flip-card" onclick="this.classList.toggle('flipped')">
+              <div class="flip-inner">
+                <div class="flip-face flip-front"><b>IRR</b><span>Tap →</span></div>
+                <div class="flip-face flip-back">Annualized return accounting for the timing of every cash flow.</div>
+              </div>
+            </div>
+            <div class="flip-card" onclick="this.classList.toggle('flipped')">
+              <div class="flip-inner">
+                <div class="flip-face flip-front"><b>Equity Multiple</b><span>Tap →</span></div>
+                <div class="flip-face flip-back">Total cash returned ÷ cash invested over the life of the deal.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">Sheet 08 / 09</div>
+      </div>
+
+      <!-- 9 CTA — mirrors the eBook ad creative exactly -->
+      <div class="slide cta">
+        <div class="content">
+          <div class="kicker" style="font-size:20px;">Get Our Free eBook Today!</div>
+          <h1 class="headline" style="font-size:22px;">Exclusive eBook Reveals Passive Real Estate Investment Strategies for High-Net-Worth Professionals.</h1>
+          <p class="body">Discover the proven blueprint for high-net-worth professionals to <b>build long-term equity</b> and generate <b>consistent, tax-efficient passive income</b> through smart real estate syndications.</p>
+          <button class="btn-gold" style="margin-top:14px;">Get Your Copy Now</button>
+        </div>
+        <div class="foot">Sheet 09 / 09</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="navbtn" id="prevBtn" aria-label="Previous slide">‹</button>
+    <div class="dots" id="dots"></div>
+    <button class="navbtn" id="nextBtn" aria-label="Next slide">›</button>
+  </div>
+  <div class="hint">Swipe, tap dots, or use ← → keys</div>
+</div>
+
+<script>
+  const track = document.getElementById('track');
+  const slides = document.querySelectorAll('.slide');
+  const dotsWrap = document.getElementById('dots');
+  const progressWrap = document.getElementById('progress');
+  const total = slides.length;
+  let current = 0;
+
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('button');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+    const seg = document.createElement('div');
+    seg.className = 'seg';
+    const fill = document.createElement('div');
+    fill.className = 'fill';
+    seg.appendChild(fill);
+    progressWrap.appendChild(seg);
+  }
+
+  function render() {
+    track.style.transform = `translateX(-${current * 100}%)`;
+    [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === current));
+    [...progressWrap.children].forEach((seg, i) => {
+      seg.querySelector('.fill').style.width = i <= current ? '100%' : '0%';
+    });
+  }
+
+  function goTo(i) {
+    current = Math.max(0, Math.min(total - 1, i));
+    render();
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') goTo(current + 1);
+    if (e.key === 'ArrowLeft') goTo(current - 1);
+  });
+
+  let startX = 0, isDragging = false;
+  const frame = document.getElementById('frame');
+  frame.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; isDragging = true; }, {passive:true});
+  frame.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (dx > 50) goTo(current - 1);
+    else if (dx < -50) goTo(current + 1);
+    isDragging = false;
+  }, {passive:true});
+
+  function toggleMath(btn) {
+    const box = document.getElementById('mathbox');
+    box.classList.toggle('open');
+    btn.textContent = box.classList.contains('open') ? 'Hide The Math ↑' : 'Tap To See The Math ↓';
+  }
+
+  render();
+</script>
+</body>
+</html>
